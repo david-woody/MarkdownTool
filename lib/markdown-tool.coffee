@@ -23,36 +23,25 @@ module.exports = MarkdownTool =
         markdownToolViewState: @markdownToolView.serialize()
 
 
-    formatDate :->
-        @time=new Date()
+    formatDate : ->
+        time=new Date()
         format="yyyy-MM-dd HH:mm:ss"
-        @dict = {
-        "yyyy": @time.getFullYear(),
-        "M": @time.getMonth() + 1,
-        "d": @time.getDate(),
-        "H": @time.getHours(),
-        "m": @time.getMinutes(),
-        "s": @time.getSeconds(),
-        "MM": ("" + (@time.getMonth() + 101)).substr(1),
-        "dd": ("" + (@time.getDate() + 100)).substr(1),
-        "HH": ("" + (@time.getHours() + 100)).substr(1),
-        "mm": ("" + (@time.getMinutes() + 100)).substr(1),
-        "ss": ("" + (@time.getSeconds() + 100)).substr(1)
+        dict = {
+        "yyyy": time.getFullYear(),
+        "M": time.getMonth() + 1,
+        "d": time.getDate(),
+        "H": time.getHours(),
+        "m": time.getMinutes(),
+        "s": time.getSeconds(),
+        "MM": ("" + (time.getMonth() + 101)).substr(1),
+        "dd": ("" + (time.getDate() + 100)).substr(1),
+        "HH": ("" + (time.getHours() + 100)).substr(1),
+        "mm": ("" + (time.getMinutes() + 100)).substr(1),
+        "ss": ("" + (time.getSeconds() + 100)).substr(1)
         };
-        # console.log (@time)
-        #
-        console.log (@time)
-        console.log (@dict)
-        console.log (@dict["yyyy"])
-        format.replace(/(yyyy|MM?|dd?|HH?|ss?|mm?)/g,
-          (match)->
-            firstDigit = match
-            console.log match
-            firstDigit
-        return format
-
-
-
+        return format.replace /(yyyy|MM?|dd?|HH?|ss?|mm?)/g,
+  	         (key)=>
+    	          return dict[key];
 
     formTime: ->
         # time=new Date().toLocaleString()
