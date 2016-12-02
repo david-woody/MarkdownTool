@@ -1,7 +1,7 @@
 {
   "name": "markdown-tool",
   "main": "./lib/markdown-tool",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A markdown helper tool. Such as Insert Time and Insert Pic.",
   "keywords": [],
   "activationCommands": {
