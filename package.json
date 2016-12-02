@@ -8,7 +8,7 @@
   "activationCommands": {
     "atom-workspace": "markdown-tool:toggle"
   },
-  "repository": "https://github.com/atom/markdown-tool",
+  "repository": "https://github.com/david-woody/MarkdownTool.git",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
