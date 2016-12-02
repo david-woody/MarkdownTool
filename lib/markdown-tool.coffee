@@ -22,7 +22,6 @@ module.exports = MarkdownTool =
     serialize: ->
         markdownToolViewState: @markdownToolView.serialize()
 
-
     formatDate : ->
         time=new Date()
         format="yyyy-MM-dd HH:mm:ss"
