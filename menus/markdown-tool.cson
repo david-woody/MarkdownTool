@@ -15,6 +15,10 @@
         {
           'label': 'Insert Current Time'
           'command': 'markdown-tool:insert-current-time'
+        },
+        {
+          'label': 'Insert Image'
+          'command': 'markdown-tool:insert-image'
         }
       ]
     ]

@@ -8,4 +8,5 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 'atom-text-editor':
-  'alt-shift-T': 'markdown-tool:insert-current-time'
+  'alt-T': 'markdown-tool:insert-current-time'
+  'alt-P': 'markdown-tool:insert-image'

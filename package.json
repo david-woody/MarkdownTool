@@ -6,7 +6,8 @@
   "keywords": [],
   "activationCommands": {
     "atom-text-editor": [
-      "markdown-tool:insert-current-time"
+      "markdown-tool:insert-current-time",
+      "markdown-tool:insert-image"
     ]
   },
   "repository": "https://github.com/david-woody/MarkdownTool.git",
