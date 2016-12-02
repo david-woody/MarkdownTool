@@ -2,19 +2,19 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle markdown-tool'
-      'command': 'markdown-tool:toggle'
+      'label': 'Insert Current Time'
+      'command': 'markdown-tool:insert-current-time'
     }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'markdown-tool'
+      'label': 'MarkDownTool'
       'submenu': [
         {
-          'label': 'Toggle'
-          'command': 'markdown-tool:toggle'
+          'label': 'Insert Current Time'
+          'command': 'markdown-tool:insert-current-time'
         }
       ]
     ]

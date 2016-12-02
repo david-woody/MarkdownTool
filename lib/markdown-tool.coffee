@@ -14,8 +14,9 @@ module.exports = MarkdownTool =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'markdown-tool:toggle': => @toggle()
-
+    @subscriptions.add atom.commands.add 'atom-text-editor','markdown-tool:insert-current-time': (event) ->
+      editor = @getModel()
+      editor.insertText(new Date().toLocaleString())
   deactivate: ->
     @modalPanel.destroy()
     @subscriptions.dispose()
@@ -23,11 +24,3 @@ module.exports = MarkdownTool =
 
   serialize: ->
     markdownToolViewState: @markdownToolView.serialize()
-
-  toggle: ->
-    console.log 'MarkdownTool was toggled!'
-
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      @modalPanel.show()

@@ -2,15 +2,22 @@
   "name": "markdown-tool",
   "main": "./lib/markdown-tool",
   "version": "0.1.0",
-  "description": "A short description of your package",
+  "description": "A markdown helper tool. Such as Insert Time and Insert Pic.",
   "keywords": [],
   "activationCommands": {
-    "atom-workspace": "markdown-tool:toggle"
+    "atom-text-editor": [
+      "markdown-tool:insert-current-time"
+    ]
   },
   "repository": "https://github.com/david-woody/MarkdownTool.git",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "author": {
+    "name": "Wallent",
+    "email": "ding.woody@gmail.com",
+    "url": "http://www.adoregeek.com/"
+  }
 }
