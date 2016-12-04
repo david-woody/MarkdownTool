@@ -15,7 +15,12 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "fs-plus": "^2.0.0",
+    "atom-space-pen-views": "^2.1.0",
+    "node-qiniu":"^6.2.0",
+    "qiniu": "^6.1.8"
+  },
   "author": {
     "name": "Wallent",
     "email": "ding.woody@gmail.com",

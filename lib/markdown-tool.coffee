@@ -1,62 +1,69 @@
 MarkdownToolView = require './markdown-tool-view'
 {CompositeDisposable} = require 'atom'
 configSchema = require "./config-schema"
-
+util=require "./utils"
 module.exports = MarkdownTool =
     markdownToolView: null
-    modalPanel: null
-    subscriptions: null
     config:configSchema
 
     activate: (state) ->
-        @markdownToolView = new MarkdownToolView(state.markdownToolViewState)
-        @modalPanel = atom.workspace.addModalPanel(item: @markdownToolView.getElement(), visible: false)
+        @markdownToolView = new MarkdownToolView()
+
         # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
         @disposables = new CompositeDisposable()
         @disposables.add atom.commands.add 'atom-text-editor',
             'markdown-tool:insert-current-time': => @formTime()
         @disposables.add atom.commands.add 'atom-text-editor',
             'markdown-tool:insert-image':=>@addPic()
+        @attachEvent()
+
+    attachEvent: ->
+        workspaceElement = atom.views.getView(atom.workspace)
+        workspaceElement.addEventListener 'keydown', (e) =>
+            editor = atom.workspace.getActiveTextEditor()
+            if atom.config.get('markdown-tool.ImageUpload.disableImagePaste')
+                editor?.observeGrammar (grammar) =>
+                    console.log grammar.scopeName
+                    # return unless grammar
+                    # return unless grammar.scopeName is 'source.gfm'
+                    @eventHandler e
+            else
+                @eventHandler e
+
+    eventHandler: (e) ->
+        console.log e.keyCode
+        if (e.metaKey && e.keyCode == 86 || e.ctrlKey && e.keyCode == 86)
+            clipboard = require('clipboard')
+            console.log clipboard
+            img = clipboard.readImage()
+            if (img.isEmpty())
+              console.log "This is not picture~~"
+            unless (img.isEmpty())
+               console.log img
+            return if img.isEmpty()
 
     deactivate: ->
         @modalPanel.destroy()
-        @subscriptions.dispose()
         @markdownToolView.destroy()
 
     serialize: ->
         markdownToolViewState: @markdownToolView.serialize()
 
+    isMarkdown: ->
+        editor = atom.workspace.getActiveTextEditor()
+        return false unless editor?
+        console.log editor.getGrammar().scopeName
+        return false
 
+    isDisalbePaste:->
 
-    formatDate : ->
-        time=new Date()
-        format="yyyy-MM-dd HH:mm:ss"
-        dict = {
-        "yyyy": time.getFullYear(),
-        "M": time.getMonth() + 1,
-        "d": time.getDate(),
-        "H": time.getHours(),
-        "m": time.getMinutes(),
-        "s": time.getSeconds(),
-        "MM": ("" + (time.getMonth() + 101)).substr(1),
-        "dd": ("" + (time.getDate() + 100)).substr(1),
-        "HH": ("" + (time.getHours() + 100)).substr(1),
-        "mm": ("" + (time.getMinutes() + 100)).substr(1),
-        "ss": ("" + (time.getSeconds() + 100)).substr(1)
-        };
-        return format.replace /(yyyy|MM?|dd?|HH?|ss?|mm?)/g,
-  	         (key)=>
-    	          return dict[key];
+    getConfig: (config) ->
+        atom.config.get "markdown-tool.QiNiu.#{config}"
 
     formTime: ->
         editor=atom.workspace.getActiveTextEditor()
-        editor.insertText(@formatDate())
+        editor.insertText(util.formatDate())
 
     addPic:->
-        if @modalPanel.isVisible()
-          @modalPanel.hide()
-        else
-          editor = atom.workspace.getActiveTextEditor()
-          words = editor.getText().split(/\s+/).length
-          @markdownToolView.setCount(words)
-          @modalPanel.show()
+        markdownToolView = new MarkdownToolView()
+        markdownToolView.display()
