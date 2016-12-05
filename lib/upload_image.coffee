@@ -9,6 +9,7 @@ module.exports = class QiNiuUploader
             secret_key: @getConfig("qiniuSK")
           });
         @imagesBucket = qiniu.bucket(@getConfig("qiniuBucket"));
+        @domain=@getConfig("qiniuDomain")
 
     getToken: (uploadName) ->
       putPolicy = new qiniu.rs.PutPolicy(@bucket+":"+uploadName)
@@ -18,10 +19,9 @@ module.exports = class QiNiuUploader
     upload: (uploadPath, callback) ->
       @imagesBucket.putFile @uploadImageName, uploadPath, (err, ret) =>
             if err
-              console.log err
+              callback(err)
             else
-              console.log "success"
-
+              callback(null,{ret: ret, url:"#{@domain}/#{ret.key}"})
 
     getConfig: (config) ->
       atom.config.get "markdown-tool.QiNiu.#{config}"

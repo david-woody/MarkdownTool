@@ -55,8 +55,15 @@ class MarkdownToolView extends View
             }))
 
     onConfirm: ->
-        console.log "confirm"
+        # return unless @imgSrc
+        @insertImage();
         @detach()
+
+    insertImage: ->
+      title = @titleEditor.getText().trim()
+      text = "![#{title}](#{@imgSrc})"
+      @editor.insertText(text)
+
 
     display: ->
         @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
@@ -64,6 +71,7 @@ class MarkdownToolView extends View
         @editor = atom.workspace.getActiveTextEditor()
         @panel.show()
         @imageEditor.focus()
+
 
     detach: ->
         if @panel.isVisible()
@@ -86,6 +94,7 @@ class MarkdownToolView extends View
             properties: ['openFile']
             defaultPath: lastInsertImageDir
         return unless files && files.length > 0
+        @showUploadMessage("")
         @imageEditor.setText(files[0])
         @uploadNameEditor.setText(utils.getFileName(files[0]))
         @updateImageSource(files[0])
@@ -133,11 +142,19 @@ class MarkdownToolView extends View
         @alignEditor.setText(position)
 
     uploadImage:->
-        console.log "upload"
         return unless @uploadNameEditor.getText()
         imageUploader=new uploader(@uploadNameEditor.getText())
-        imageUploader.upload @imageEditor.getText(), (err, ret)=>
-          if err
-            callback(err)
-          else
-            callback(null, {ret: ret, url:"#{ret.key}"})
+
+        setTimeout =>
+            imageUploader.upload @imageEditor.getText(), (err, data)=>
+                if err
+                    console.log err
+                    @showUploadMessage("Error(#{err.code}): #{err.error}")
+                else
+                    @showUploadMessage("Success!")
+                    @imgSrc = data.url
+                    @titleEditor.focus()
+        ,200
+
+      showUploadMessage: (msg) ->
+        @uploadMessage.text(msg)
