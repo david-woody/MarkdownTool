@@ -2,7 +2,7 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 remote = require "remote"
 dialog = remote.dialog || remote.require "dialog"
-lastInsertImageDir = null # remember last inserted image directory
+fromPasteUrl = null # remember last inserted image directory
 utils= require "./utils"
 uploader=require "./upload_image"
 # uploader = require('./upload_image');
@@ -61,11 +61,12 @@ class MarkdownToolView extends View
 
     insertImage: ->
       title = @titleEditor.getText().trim()
-      text = "![#{title}](#{@imgSrc})"
+      text = "![#{title}](http://#{@imgSrc})"
       @editor.insertText(text)
 
 
-    display: ->
+    display:(pasteUrl) ->
+        fromPasteUrl=pasteUrl
         @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
         @previouslyFocusedElement = $(document.activeElement)
         @editor = atom.workspace.getActiveTextEditor()
@@ -143,6 +144,9 @@ class MarkdownToolView extends View
 
     uploadImage:->
         return unless @uploadNameEditor.getText()
+        if(!fromPasteUrl){
+          @showUploadMessage("This has uploaded!")
+        }
         imageUploader=new uploader(@uploadNameEditor.getText())
 
         setTimeout =>

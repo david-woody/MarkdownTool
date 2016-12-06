@@ -7,21 +7,36 @@ module.exports = class QiNiuUploader
         qiniu.config({
             access_key: @getConfig("qiniuAK"),
             secret_key: @getConfig("qiniuSK")
-          });
+            });
         @imagesBucket = qiniu.bucket(@getConfig("qiniuBucket"));
         @domain=@getConfig("qiniuDomain")
 
     getToken: (uploadName) ->
-      putPolicy = new qiniu.rs.PutPolicy(@bucket+":"+uploadName)
-      console.log putPolicy.token()
-      return putPolicy.token()
+        putPolicy = new qiniu.rs.PutPolicy(@bucket+":"+uploadName)
+        console.log putPolicy.token()
+        return putPolicy.token()
 
     upload: (uploadPath, callback) ->
-      @imagesBucket.putFile @uploadImageName, uploadPath, (err, ret) =>
+        @imagesBucket.putFile @uploadImageName, uploadPath, (err, ret) =>
             if err
-              callback(err)
+                callback(err)
             else
-              callback(null,{ret: ret, url:"#{@domain}/#{ret.key}"})
+                callback(null,{ret: ret, url:"#{@domain}/#{ret.key}"})
+
+
+    uploadByStream: (readingStream, callback)->
+        puttingStream=@imagesBucket.createPutStream(@uploadImageName);
+        readingStream.pipe(puttingStream)
+            .on('error', (err) =>
+                console.error(err);
+                callback(err)
+              )
+            .on('end', (reply)=>
+                console.dir(reply);
+                callback(null,{ret: reply, url:"#{@domain}/#{reply.key}"})
+            );
+
+
 
     getConfig: (config) ->
-      atom.config.get "markdown-tool.QiNiu.#{config}"
+        atom.config.get "markdown-tool.QiNiu.#{config}"

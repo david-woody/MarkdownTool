@@ -2,45 +2,58 @@ MarkdownToolView = require './markdown-tool-view'
 {CompositeDisposable} = require 'atom'
 configSchema = require "./config-schema"
 util=require "./utils"
+uploader=require "./upload_image"
 module.exports = MarkdownTool =
     markdownToolView: null
     config:configSchema
 
+
     activate: (state) ->
         @markdownToolView = new MarkdownToolView()
-
         # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
         @disposables = new CompositeDisposable()
+        @attachEvent()
         @disposables.add atom.commands.add 'atom-text-editor',
             'markdown-tool:insert-current-time': => @formTime()
         @disposables.add atom.commands.add 'atom-text-editor',
             'markdown-tool:insert-image':=>@addPic()
-        @attachEvent()
+
 
     attachEvent: ->
         workspaceElement = atom.views.getView(atom.workspace)
         workspaceElement.addEventListener 'keydown', (e) =>
             editor = atom.workspace.getActiveTextEditor()
-            if atom.config.get('markdown-tool.ImageUpload.disableImagePaste')
-                editor?.observeGrammar (grammar) =>
-                    console.log grammar.scopeName
-                    # return unless grammar
-                    # return unless grammar.scopeName is 'source.gfm'
+            return unless editor
+            return unless @isMarkdown()
+            if (e.metaKey && e.keyCode == 86 || e.ctrlKey && e.keyCode == 86)
+                if !atom.config.get('markdown-tool.ImageUpload.disableImagePaste')
                     @eventHandler e
-            else
-                @eventHandler e
+
 
     eventHandler: (e) ->
-        console.log e.keyCode
-        if (e.metaKey && e.keyCode == 86 || e.ctrlKey && e.keyCode == 86)
-            clipboard = require('clipboard')
-            console.log clipboard
-            img = clipboard.readImage()
-            if (img.isEmpty())
-              console.log "This is not picture~~"
-            unless (img.isEmpty())
-               console.log img
-            return if img.isEmpty()
+        clipboard = require('clipboard')
+        console.log clipboard
+        img = clipboard.readImage()
+        return if img.isEmpty()
+        console.log img
+
+        stream = require('stream');
+        bufferStream = new stream.PassThrough();
+        bufferStream.end(img.toPng());
+
+        filename = "markdown-tool-paste-#{new Date().toLocaleDateString()}.png"
+        console.log filename
+        imageUploader=new uploader(filename)
+        setTimeout =>
+            imageUploader.uploadByStream bufferStream, (err, data)=>
+                if err
+                    console.log "Error(#{err.code}): #{err.error}"
+                else
+                    console.log "Success!"+data.url
+                    markdownToolView = new MarkdownToolView()
+                    markdownToolView.display(data.url)
+        ,200
+
 
     deactivate: ->
         @modalPanel.destroy()
@@ -52,8 +65,14 @@ module.exports = MarkdownTool =
     isMarkdown: ->
         editor = atom.workspace.getActiveTextEditor()
         return false unless editor?
-        console.log editor.getGrammar().scopeName
-        return false
+        grammars = ['source.gfm'
+        'source.gfm.nvatom'
+        'source.litcoffee'
+        'source.asciidoc'
+        'text.md'
+        'text.plain'
+        'text.plain.null-grammar']
+        return grammars.indexOf(editor.getGrammar().scopeName) == 4
 
     isDisalbePaste:->
 
@@ -65,5 +84,6 @@ module.exports = MarkdownTool =
         editor.insertText(util.formatDate())
 
     addPic:->
-        markdownToolView = new MarkdownToolView()
-        markdownToolView.display()
+        if(@isMarkdown())
+            markdownToolView = new MarkdownToolView()
+            markdownToolView.display()
