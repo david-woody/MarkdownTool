@@ -1,7 +1,7 @@
 {
   "name": "markdown-tool",
   "main": "./lib/markdown-tool",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "A markdown helper tool. Such as Insert Time and Insert Pic.",
   "keywords": [],
   "activationCommands": {
@@ -18,7 +18,7 @@
   "dependencies": {
     "fs-plus": "^2.0.0",
     "atom-space-pen-views": "^2.1.0",
-    "node-qiniu":"^6.2.0",
+    "node-qiniu": "^6.2.0",
     "qiniu": "^6.1.8"
   },
   "author": {
