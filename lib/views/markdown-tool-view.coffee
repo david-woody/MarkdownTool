@@ -3,8 +3,8 @@
 remote = require "remote"
 dialog = remote.dialog || remote.require "dialog"
 fromPasteUrl = null # remember last inserted image directory
-utils= require "./utils"
-uploader=require "./upload_image"
+utils= require "../utils"
+uploader=require "../upload_image"
 # uploader = require('./upload_image');
 # fs = require "fs-plus"
 module.exports =
@@ -66,7 +66,6 @@ class MarkdownToolView extends View
 
 
     display:(pasteUrl) ->
-        fromPasteUrl=pasteUrl
         @panel ?= atom.workspace.addModalPanel(item: this, visible: false)
         @previouslyFocusedElement = $(document.activeElement)
         @editor = atom.workspace.getActiveTextEditor()
@@ -109,7 +108,6 @@ class MarkdownToolView extends View
 
     displayImagePreview: (file) ->
         return if @imageOnPreview == file
-
         if utils.isImageFile(file)
             @message.text("Opening Image Preview ...")
             console.log "resolve="+@resolveImagePath(file)
@@ -144,11 +142,7 @@ class MarkdownToolView extends View
 
     uploadImage:->
         return unless @uploadNameEditor.getText()
-        if(!fromPasteUrl){
-          @showUploadMessage("This has uploaded!")
-        }
         imageUploader=new uploader(@uploadNameEditor.getText())
-
         setTimeout =>
             imageUploader.upload @imageEditor.getText(), (err, data)=>
                 if err

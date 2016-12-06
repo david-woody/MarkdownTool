@@ -1,4 +1,5 @@
-MarkdownToolView = require './markdown-tool-view'
+MarkdownToolView = require './views/markdown-tool-view'
+PasteUploadView = require './views/paste-upload-view'
 {CompositeDisposable} = require 'atom'
 configSchema = require "./config-schema"
 util=require "./utils"
@@ -11,6 +12,7 @@ module.exports = MarkdownTool =
     activate: (state) ->
         @markdownToolView = new MarkdownToolView()
         # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+
         @disposables = new CompositeDisposable()
         @attachEvent()
         @disposables.add atom.commands.add 'atom-text-editor',
@@ -32,26 +34,22 @@ module.exports = MarkdownTool =
 
     eventHandler: (e) ->
         clipboard = require('clipboard')
-        console.log clipboard
         img = clipboard.readImage()
         return if img.isEmpty()
-        console.log img
-
+        #make nativeImage to buffer,then change the buffer to readingStream
         stream = require('stream');
         bufferStream = new stream.PassThrough();
         bufferStream.end(img.toPng());
-
-        filename = "markdown-tool-paste-#{new Date().toLocaleDateString()}.png"
-        console.log filename
+        filename = util.formatDate("yyyy-MM-dd-HH:mm:ss")+".png"
         imageUploader=new uploader(filename)
         setTimeout =>
-            imageUploader.uploadByStream bufferStream, (err, data)=>
+            imageUploader.uploadByStream  bufferStream, (err, data)=>
                 if err
                     console.log "Error(#{err.code}): #{err.error}"
                 else
-                    console.log "Success!"+data.url
-                    markdownToolView = new MarkdownToolView()
-                    markdownToolView.display(data.url)
+                    newUrl="http://"+data.url
+                    pasteUploadView = new PasteUploadView()
+                    pasteUploadView.display(newUrl)
         ,200
 
 
@@ -81,7 +79,11 @@ module.exports = MarkdownTool =
 
     formTime: ->
         editor=atom.workspace.getActiveTextEditor()
-        editor.insertText(util.formatDate())
+        formateType=atom.config.get "markdown-tool.Time.type"
+        if formateType
+          editor.insertText(util.formatDate(formateType))
+        else
+          editor.insertText(util.formatDate("yyyy-MM-dd HH:mm:ss"))
 
     addPic:->
         if(@isMarkdown())

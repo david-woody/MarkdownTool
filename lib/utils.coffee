@@ -13,7 +13,6 @@ getFileName=(file)->
 
 formatDate = (formate) ->
       time=new Date()
-      format="yyyy-MM-dd HH:mm:ss"
       dict = {
       "yyyy": time.getFullYear(),
       "M": time.getMonth() + 1,
@@ -27,9 +26,10 @@ formatDate = (formate) ->
       "mm": ("" + (time.getMinutes() + 100)).substr(1),
       "ss": ("" + (time.getSeconds() + 100)).substr(1)
       };
-      return format.replace /(yyyy|MM?|dd?|HH?|ss?|mm?)/g,
+      return formate.replace /(yyyy|MM?|dd?|HH?|ss?|mm?)/g,
           (key)=>
               return dict[key];
+
 URL_REGEX = ///
   ^
   (?:\w+:)?\/\/                       # any prefix, e.g. http://

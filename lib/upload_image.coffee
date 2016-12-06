@@ -4,6 +4,7 @@ module.exports = class QiNiuUploader
     # action: correct-order-list-numbers, format-table
     constructor: (imageName) ->
         @uploadImageName = imageName
+        console.log "constructor="+@uploadImageName
         qiniu.config({
             access_key: @getConfig("qiniuAK"),
             secret_key: @getConfig("qiniuSK")
@@ -28,11 +29,9 @@ module.exports = class QiNiuUploader
         puttingStream=@imagesBucket.createPutStream(@uploadImageName);
         readingStream.pipe(puttingStream)
             .on('error', (err) =>
-                console.error(err);
                 callback(err)
               )
             .on('end', (reply)=>
-                console.dir(reply);
                 callback(null,{ret: reply, url:"#{@domain}/#{reply.key}"})
             );
 
