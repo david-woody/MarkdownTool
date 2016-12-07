@@ -1,4 +1,4 @@
-# markdown-tool package
+# Markdown-tool
 View in [Atom.io](https://atom.io/packages/markdown-tool)
 A markdown helper tool. Such as Insert Time and Insert Pic to qiniu.You can wirte markdown files easily by this tool.
 
