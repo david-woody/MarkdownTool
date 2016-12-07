@@ -53,13 +53,15 @@ class MarkdownToolView extends View
             }))
 
     onConfirm: ->
-        # return unless @imgSrc
         @insertImage();
         @detach()
 
     insertImage: ->
       title = @titleEditor.getText().trim()
-      text = "![#{title}](http://#{@imgSrc})"
+      if @imgSrc
+        text = "![#{title}](http://#{@imgSrc})"
+      else
+        text="![#{title}](#{@imageEditor.getText().trim()})"
       @editor.insertText(text)
 
 
