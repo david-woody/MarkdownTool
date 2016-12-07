@@ -13,10 +13,14 @@ Work Process
 
 # For Example
 ### 1. Insert Current time
-You can insert current time which has formated in everywhere .
+You can insert current time which has formated in everywhere.
+
 KeyMap: Alt+Shift+T
+
 Default TimeFormater :yyyy-MM-dd HH:mm:ss
+
 yyyy=year MM=month dd=day HH=hour mm=minute ss=second
+
 Replace the split "-",You can custome your formater.Such As yyyy-MM-dd HH:mm
 ##### Warning
 Word which not in ["yyyy","MM","dd","HH","mm","ss"] is not allowed.
