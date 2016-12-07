@@ -3,7 +3,7 @@ View in [Atom.io](https://atom.io/packages/markdown-tool)
 A markdown helper tool. Such as Insert Time and Insert Pic to qiniu.You can wirte markdown files easily by this tool.
 
 
-# Work Process
+## Work Process
 
 - [x]  Insert Current Time
 - [x]  Insert Pic By QiNiu
@@ -11,7 +11,7 @@ A markdown helper tool. Such as Insert Time and Insert Pic to qiniu.You can wirt
 - [x]  Insert Pic By Clipboard
 
 
-# For Example
+## For Example
 ### 1. Insert Current time
 You can insert current time which has formated in everywhere.
 
@@ -22,7 +22,7 @@ Default TimeFormater :yyyy-MM-dd HH:mm:ss
 yyyy=year MM=month dd=day HH=hour mm=minute ss=second
 
 Replace the split "-",You can custome your formater.Such As yyyy-MM-dd HH:mm
-##### Warning
+#### Warning
 Word which not in ["yyyy","MM","dd","HH","mm","ss"] is not allowed.
 ### 2. Insert pic from paste
 You can insert pic from clipboard by uploading the pic to QiNiu engine.
