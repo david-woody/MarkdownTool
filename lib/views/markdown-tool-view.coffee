@@ -5,8 +5,6 @@ dialog = remote.dialog || remote.require "dialog"
 utils= require "../utils"
 uploader=require "../upload_image"
 lastInsertImageDir=null# remember last inserted image directory
-# uploader = require('./upload_image');
-# fs = require "fs-plus"
 module.exports =
 class MarkdownToolView extends View
     @content: ->
