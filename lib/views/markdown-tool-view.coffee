@@ -2,9 +2,9 @@
 {$, View, TextEditorView} = require "atom-space-pen-views"
 remote = require "remote"
 dialog = remote.dialog || remote.require "dialog"
-fromPasteUrl = null # remember last inserted image directory
 utils= require "../utils"
 uploader=require "../upload_image"
+lastInsertImageDir=null# remember last inserted image directory
 # uploader = require('./upload_image');
 # fs = require "fs-plus"
 module.exports =
